@@ -52,6 +52,10 @@ const App = () => {
 				return false; // remove new lines from end
 			}
 
+			if (!element.content || element.content.length === 0) {
+				return false;
+			}
+
 			return true;
 		})
 
