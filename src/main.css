@@ -1,0 +1,87 @@
+.main-container {
+    padding: 0vw 48px;
+}
+
+.quill {
+    height: 600px;
+}
+
+.ql-toolbar {
+    background-color: #f6f6f6;
+}
+
+.ql-container {
+    background-color: #ffffff;
+}
+
+.ace_editor {
+    width: unset !important;
+    height: 642px !important;
+    border: solid 1px #cccccc;
+}
+
+.custom-bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url("/background.png");
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    transition: opacity 700ms;
+    width: 100%;
+    z-index: -999;
+}
+
+.editors .col {
+    padding: 0px 24px;
+}
+
+.select-box {
+    width: 450px;
+    margin-top: 24px;
+}
+
+.display-4 {
+    color: #fafafa;
+}
+
+.convert-options-group {
+    margin-bottom: 8px;
+    padding-left: 16px;
+}
+
+.convert-options-group .option {
+    border-radius: 8px;
+    margin: 0px 8px;
+    min-width: 120px;
+}
+
+.option.btn-primary {
+    border: solid 1px #1363b8;
+}
+
+.option.btn-secondary {
+    border: solid 1px #5f5f5f;
+}
+
+@media only screen and (max-width: 1050px) {
+    .convert-options-group {
+        padding-left: 0px;
+    }
+
+    .convert-options-group .option {
+        margin: 0px 6px;
+    }
+
+    .main-container {
+        padding: 0vw 20px;
+    }
+    
+    .editors .col {
+        padding: 0px 6px;
+    }
+}
