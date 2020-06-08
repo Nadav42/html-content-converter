@@ -1,0 +1,85 @@
+.tabs-main-content {
+    height: calc(100vh - 38px);
+    overflow-y:auto;
+    scroll-behavior: auto;
+}
+
+/* --- tabs structure css --- */
+
+.tabs-list {
+    padding: 5px 8px 0px 8px;
+    height: 38px;
+
+    white-space: nowrap; 
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.tab-button {
+    display: inline-block;
+    padding: 4px 20px;
+
+    height: 32px;
+    width: 175px;
+
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+
+    border-radius: 8px 8px 0px 0px;
+    cursor: pointer;
+}
+
+/* --- tab light theme --- */
+
+.tabs-list.light {
+    background-color: #f8f9fa;
+    border-bottom: solid 1px rgb(202, 205, 210);
+}
+
+.tab-button.light {
+    color: rgb(60, 64, 67);
+    background-color: #f8f9fa;
+
+    border-top: solid 1px rgb(202, 205, 210);
+    border-left: solid 1px rgb(202, 205, 210);
+}
+
+.tab-button.light:last-child {
+    border-right: solid 1px rgb(202, 205, 210);
+}
+
+.tab-button.light:hover {
+    background-color: rgb(238, 240, 242);
+}
+
+.tab-button.light.active {
+    background-color: rgb(255, 255, 255);
+}
+
+/* --- tab dark theme --- */
+
+.tabs-list.dark {
+    background-color: #282823;
+    border-bottom: solid 1px #505050;
+}
+
+.tab-button.dark {
+    color: #f8f9fa;
+    background-color: #282823;
+
+    border-top: solid 1px #505050;
+    border-left: solid 1px #505050;
+}
+
+.tab-button.dark:last-child {
+    border-right: solid 1px #505050;
+}
+
+.tab-button.dark:hover {
+    background-color: #404040;
+}
+
+.tab-button.dark.active {
+    background-color: #202020;
+}

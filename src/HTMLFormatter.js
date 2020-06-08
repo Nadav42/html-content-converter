@@ -25,7 +25,7 @@ const ConvertOptions = ({ active, setActive }) => {
 	);
 }
 
-const App = () => {
+const HTMLFormatter = () => {
 	const [convertedText, setConvertedText] = useState("");
 	const [activeConvert, setActiveConvert] = useState(DEFAULT_CONVERT);
 	const [currentOps, setCurrentOps] = useState(opsDefault);
@@ -131,6 +131,6 @@ const App = () => {
 			</div>
 		</div>
 	);
-}
+};
 
-export default App;
+export default HTMLFormatter;
