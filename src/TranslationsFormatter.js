@@ -228,6 +228,9 @@ const TranslationsFormatter = () => {
 			setErrorMessage(`Lines count does not match! Original Doc - ${originalElements.length} lines | Translation Doc - ${translationElements.length} lines`)
 		}
 
+		let jsxCleanHTMLArray = codeOriginalJSX.replace(/<[^>]*>/gi, "\n"); // replace all html tags with new lines
+		jsxCleanHTMLArray = jsxCleanHTMLArray.split("\n"); // make the array
+
 		for (let index = 0; index < minLength; index++) {
 			const originalContent = originalElements[index].content;
 			const translatedContent = translationElements[index].content;
@@ -235,7 +238,18 @@ const TranslationsFormatter = () => {
 			console.log("replace:", originalContent);
 			console.log("with:", translatedContent);
 
-			if (convertedJSX.includes(originalContent)) {
+			// warning for when the string to be replaced is duplicated in content, need to fix this but at least show a warning for now
+			const replaceIndex1 = convertedJSX.indexOf(originalContent);
+			const replaceIndex2 = convertedJSX.indexOf(originalContent, replaceIndex1 + 1);
+
+			if (replaceIndex1 >= 0 && replaceIndex2 >= 0 && replaceIndex1 !== replaceIndex2) {
+				setErrorMessage(`Warning! there are multiple replace options for string "${originalContent}"`);
+			}
+
+			if (convertedJSX.includes(originalContent) && jsxCleanHTMLArray.includes(originalContent)) {
+				const foundIndex = jsxCleanHTMLArray.indexOf(originalContent);
+				jsxCleanHTMLArray = jsxCleanHTMLArray.filter((value, index) => {return index !== foundIndex}); // to prevent counting duplicates TODO: need to prevent replacing duplicates
+
 				convertedJSX = convertedJSX.replace(originalContent, translatedContent);
 				replacedCounter = replacedCounter + 1;
 			}
