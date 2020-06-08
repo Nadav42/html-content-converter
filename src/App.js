@@ -107,7 +107,7 @@ const ReplaceFailsList = ({ replaceFails }) => {
 }
 
 const ReplaceResultsMessage = ({ replaceSuccessRate, replaceFails, show }) => {
-	if (!show || replaceSuccessRate === null || replaceSuccessRate == undefined) {
+	if (!show || replaceSuccessRate === null || replaceSuccessRate === undefined) {
 		return null;
 	}
 
@@ -148,22 +148,42 @@ const htmlArrayToText = (arr) => {
 	return html;
 }
 
-const DiffViewer = ({ replaceSuccessRate, originalContentOps, codeOriginalJSX }) => {
-	if (!originalContentOps || !codeOriginalJSX || !codeOriginalJSX.length || replaceSuccessRate === 100) {
+const DiffViewer = ({ replaceSuccessRate, originalContentOps, translationContentOps, codeOriginalJSX, docDiff }) => {
+	if (!originalContentOps || !translationContentOps || replaceSuccessRate >= 100) {
 		return null;
 	}
 
 	const originalElements = translationProcessOpsToElements(originalContentOps);
-	let docsHTMLArray = originalElements.map(element => { return element.content });
+	let docsHTMLArrayOriginal = originalElements.map(element => { return element.content });
+
+	const translationElements = translationProcessOpsToElements(translationContentOps);
+	let docsHTMLArrayTranslation = translationElements.map(element => { return element.content });
+
+	if (docDiff) {
+		return <ReactDiffViewer oldValue={htmlArrayToText(docsHTMLArrayOriginal)} newValue={htmlArrayToText(docsHTMLArrayTranslation)} splitView={true} />;
+	}
+
+	if (!codeOriginalJSX || !codeOriginalJSX.length) {
+		return null;
+	}
 
 	let jsxCleanHTMLArray = codeOriginalJSX.replace(/<[^>]*>/gi, "\n"); // replace all html tags with new lines
 	jsxCleanHTMLArray = jsxCleanHTMLArray.split("\n"); // make the array
 
+	return <ReactDiffViewer oldValue={htmlArrayToText(docsHTMLArrayOriginal)} newValue={htmlArrayToText(jsxCleanHTMLArray)} splitView={true} />;
+}
 
-	console.log("docsHTML:", docsHTMLArray);
-	console.log("jsxCleanHTML:", jsxCleanHTMLArray);
+const ErrorMessage = ({ error }) => {
+	if (!error || !error.length) {
+		return null;
+	}
 
-	return <ReactDiffViewer oldValue={htmlArrayToText(docsHTMLArray)} newValue={htmlArrayToText(jsxCleanHTMLArray)} splitView={true} />;
+	return (
+		<div className="text-center">
+			<h2>{error}</h2>
+			<hr></hr>
+		</div>
+	);
 }
 
 const App = () => {
@@ -177,14 +197,10 @@ const App = () => {
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [conversionFinished, setConversionFinished] = useState(false);
 
-	const [originalText, setOriginalText] = useState("");
-	const [translationText, setTranslationText] = useState("");
-
 	// handle original docs paste
 	const handleOriginalChange = (content, delta, source, editor) => {
 		const opsTree = editor.getContents().ops;
 		setOriginalContentOps(opsTree);
-		setOriginalText(content);
 		console.log(opsTree);
 	}
 
@@ -192,7 +208,6 @@ const App = () => {
 	const handleTranslationChange = (content, delta, source, editor) => {
 		const opsTree = editor.getContents().ops;
 		setTranslationContentOps(opsTree);
-		setTranslationText(content);
 		console.log(opsTree);
 	}
 
@@ -208,6 +223,10 @@ const App = () => {
 		let convertedJSX = originalJSX;
 		let replacedCounter = 0;
 		const fails = [];
+
+		if (originalElements.length !== translationElements.length) {
+			setErrorMessage(`Lines count does not match! Original Doc - ${originalElements.length} lines | Translation Doc - ${translationElements.length} lines`)
+		}
 
 		for (let index = 0; index < minLength; index++) {
 			const originalContent = originalElements[index].content;
@@ -277,8 +296,9 @@ const App = () => {
 				</div>
 			</div>
 			<div className="errors-container" hidden={!conversionFinished}>
-				<ReplaceResultsMessage replaceSuccessRate={replaceSuccessRate} replaceFails={replaceFails} show={conversionFinished} />
-				<DiffViewer replaceSuccessRate={replaceSuccessRate} originalContentOps={originalContentOps} codeOriginalJSX={codeOriginalJSX} />
+				<ErrorMessage error={errorMessage} />
+				<ReplaceResultsMessage replaceSuccessRate={replaceSuccessRate} replaceFails={replaceFails} show={conversionFinished && !errorMessage} />
+				<DiffViewer replaceSuccessRate={replaceSuccessRate} originalContentOps={originalContentOps} translationContentOps={translationContentOps} codeOriginalJSX={codeOriginalJSX} docDiff={errorMessage && errorMessage.length > 0} />
 			</div>
 		</div>
 	);
