@@ -240,7 +240,7 @@ const TranslationsFormatter = () => {
 
 			// warning for when the string to be replaced is duplicated in content, need to fix this but at least show a warning for now
 			const replaceIndex1 = convertedJSX.indexOf(originalContent);
-			const replaceIndex2 = convertedJSX.indexOf(originalContent, replaceIndex1 + 1);
+			const replaceIndex2 = convertedJSX.indexOf(originalContent, replaceIndex1 + originalContent.length);
 
 			if (replaceIndex1 >= 0 && replaceIndex2 >= 0 && replaceIndex1 !== replaceIndex2) {
 				setErrorMessage(`Warning! there are multiple replace options for string "${originalContent}"`);
