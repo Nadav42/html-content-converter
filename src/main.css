@@ -94,3 +94,20 @@
         padding: 0px 6px;
     }
 }
+
+ol {
+    text-align: left;
+    font-size: 20px;
+}
+
+ol li {
+    padding: 8px;
+}
+
+.errors-container {
+    padding: 24px 0px 24px 0px;
+    background-color: #ffffffaa;
+    border-radius: 12px;
+    margin: 32px 0px;
+    border: solid 1px #aaaaaa;
+}

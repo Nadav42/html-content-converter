@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill'; // ES6
 import brace from 'brace';
 import AceEditor from 'react-ace';
+import ReactDiffViewer from 'react-diff-viewer';
 
-import { convertOptions, DEFAULT_CONVERT } from './convert.js';
-import { EditorElement, opsDefault } from './utils.js';
+import { EditorElement } from './utils.js';
 
 import 'react-quill/dist/quill.snow.css'; // ES6
 import 'brace/mode/html';
@@ -93,18 +93,15 @@ const ReplaceFailsList = ({ replaceFails }) => {
 	}
 
 	const failElements = replaceFails.map(text => {
-		return (
-			<>
-				<hr></hr>
-				<p>{text}</p>
-			</>
-		)
+		return <li>{text}</li>
 	});
 
 	return (
 		<div>
 			<h3>Couldn't replace the following:</h3>
-			{failElements}
+			<ol>
+				{failElements}
+			</ol>
 		</div>
 	);
 }
@@ -116,19 +113,57 @@ const ReplaceResultsMessage = ({ replaceSuccessRate, replaceFails, show }) => {
 
 	let successClass = "text-success";
 
-	if (replaceSuccessRate <= 60) {
+	if (replaceSuccessRate <= 80) {
 		successClass = "text-danger";
 	}
 	else if (replaceSuccessRate < 100) {
-		successClass = "text-warning";
+		successClass = "text-info";
 	}
 
 	return (
-		<div className="text-light text-center">
+		<div className="text-center">
 			<h3 className={successClass}>Replace Success Rate: {replaceSuccessRate}%</h3>
 			<ReplaceFailsList replaceFails={replaceFails} />
 		</div>
 	);
+}
+
+const htmlArrayToText = (arr) => {
+	let html = "";
+
+	arr = arr.filter(line => {
+		const cleanLine = line.trim();
+
+		if (!cleanLine || !cleanLine.length || cleanLine === "\r") {
+			return false;
+		}
+
+		return true;
+	})
+
+	arr.forEach(item => {
+		html = html + item + "\n\n";
+	})
+
+	return html;
+}
+
+const DiffViewer = ({ replaceSuccessRate, originalContentOps, codeOriginalJSX }) => {
+	if (!originalContentOps || !codeOriginalJSX || !codeOriginalJSX.length || replaceSuccessRate === 100) {
+		return null;
+	}
+
+	const originalElements = translationProcessOpsToElements(originalContentOps);
+	let docsHTMLArray = originalElements.map(element => { return element.content });
+
+	let jsxCleanHTMLArray = codeOriginalJSX.replace(/<[^>]*>/gi, "\n"); // replace all html tags with new lines
+	jsxCleanHTMLArray = jsxCleanHTMLArray.split("\n"); // make the array
+
+
+	console.log("docsHTML:", docsHTMLArray);
+	console.log("jsxCleanHTML:", jsxCleanHTMLArray);
+
+	return <ReactDiffViewer oldValue={htmlArrayToText(docsHTMLArray)} newValue={htmlArrayToText(jsxCleanHTMLArray)} splitView={true} />;
 }
 
 const App = () => {
@@ -142,10 +177,14 @@ const App = () => {
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [conversionFinished, setConversionFinished] = useState(false);
 
+	const [originalText, setOriginalText] = useState("");
+	const [translationText, setTranslationText] = useState("");
+
 	// handle original docs paste
 	const handleOriginalChange = (content, delta, source, editor) => {
 		const opsTree = editor.getContents().ops;
 		setOriginalContentOps(opsTree);
+		setOriginalText(content);
 		console.log(opsTree);
 	}
 
@@ -153,6 +192,7 @@ const App = () => {
 	const handleTranslationChange = (content, delta, source, editor) => {
 		const opsTree = editor.getContents().ops;
 		setTranslationContentOps(opsTree);
+		setTranslationText(content);
 		console.log(opsTree);
 	}
 
@@ -236,8 +276,9 @@ const App = () => {
 					<CodeEditor value={codeConvertedJSX} placeholder="Converted JSX will show here" />
 				</div>
 			</div>
-			<div className="mt-4">
+			<div className="errors-container" hidden={!conversionFinished}>
 				<ReplaceResultsMessage replaceSuccessRate={replaceSuccessRate} replaceFails={replaceFails} show={conversionFinished} />
+				<DiffViewer replaceSuccessRate={replaceSuccessRate} originalContentOps={originalContentOps} codeOriginalJSX={codeOriginalJSX} />
 			</div>
 		</div>
 	);
