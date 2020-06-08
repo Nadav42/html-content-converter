@@ -4,7 +4,7 @@ import brace from 'brace';
 import AceEditor from 'react-ace';
 
 import { convertOptions, DEFAULT_CONVERT } from './convert.js';
-import { EditorElement, opsDefault } from './utils.js';
+import { EditorElement } from './utils.js';
 
 import 'react-quill/dist/quill.snow.css'; // ES6
 import 'brace/mode/html';
@@ -28,7 +28,7 @@ const ConvertOptions = ({ active, setActive }) => {
 const HTMLFormatter = () => {
 	const [convertedText, setConvertedText] = useState("");
 	const [activeConvert, setActiveConvert] = useState(DEFAULT_CONVERT);
-	const [currentOps, setCurrentOps] = useState(opsDefault);
+	const [currentOps, setCurrentOps] = useState(null);
 
 	// convert ops to custom element class array
 	const processOps = (opsTree) => {
@@ -104,7 +104,7 @@ const HTMLFormatter = () => {
 			<ConvertOptions active={activeConvert} setActive={changeConvertOption} />
 			<div className="row editors">
 				<div className="col first-editor">
-					<ReactQuill onChange={handleChange} />
+					<ReactQuill onChange={handleChange} placeholder="Paste google docs content here" />
 				</div>
 				<div className="col second-editor">
 					<AceEditor

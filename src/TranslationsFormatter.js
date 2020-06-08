@@ -189,7 +189,7 @@ const ErrorMessage = ({ error }) => {
 const TranslationsFormatter = () => {
 	const [originalContentOps, setOriginalContentOps] = useState(null);
 	const [translationContentOps, setTranslationContentOps] = useState(null);
-	const [codeOriginalJSX, setCodeOriginalJSX] = useState("test");
+	const [codeOriginalJSX, setCodeOriginalJSX] = useState("");
 	const [codeConvertedJSX, setCodeConvertedJSX] = useState("");
 
 	const [replaceSuccessRate, setReplaceSuccessRate] = useState(null);
