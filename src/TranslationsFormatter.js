@@ -291,7 +291,7 @@ const TranslationsFormatter = () => {
 			<div className="custom-bg"></div>
 			<div className="mb-4"></div>
 			<div className="text-center mb-5">
-				<h1 className="display-4">Translations Conversion Tool</h1>
+				<h1 className="display-4">Translations Conversion Tool (Experimental)</h1>
 			</div>
 			<div className="row editors">
 				<div className="col first-editor">
