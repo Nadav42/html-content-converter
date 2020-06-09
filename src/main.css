@@ -3,7 +3,8 @@
 }
 
 .quill {
-    height: 600px;
+    height: 335px;
+    padding-bottom: 50px;
 }
 
 .main-container.translations .quill {
@@ -21,7 +22,7 @@
 
 .ace_editor {
     width: unset !important;
-    height: 642px !important;
+    height: 337px !important;
     border: solid 1px #cccccc;
 }
 
@@ -45,8 +46,16 @@
     z-index: -999;
 }
 
+.row.editors.formatter {
+    flex-direction: column;
+}
+
 .editors .col {
     padding: 0px 24px;
+}
+
+.editors.formatter .col {
+    margin-bottom: 24px;
 }
 
 .select-box {
@@ -92,6 +101,7 @@
     
     .editors .col {
         padding: 0px 6px;
+        margin-bottom: 0px;
     }
 }
 

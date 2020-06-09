@@ -94,6 +94,10 @@ const HTMLFormatter = () => {
 		setActiveConvert(option.key);
 	}
 
+	const handleChangeSelection = (range, source, editor) => {
+		console.log(range, source, editor);
+	}
+
 	return (
 		<div className="main-container">
 			<div className="custom-bg"></div>
@@ -102,9 +106,9 @@ const HTMLFormatter = () => {
 				<h1 className="display-4">HTML Conversion Tool</h1>
 			</div>
 			<ConvertOptions active={activeConvert} setActive={changeConvertOption} />
-			<div className="row editors">
+			<div className="row editors formatter">
 				<div className="col first-editor">
-					<ReactQuill onChange={handleChange} placeholder="Paste google docs content here" />
+					<ReactQuill onChange={handleChange} onChangeSelection={handleChangeSelection} placeholder="Paste google docs content here" />
 				</div>
 				<div className="col second-editor">
 					<AceEditor
